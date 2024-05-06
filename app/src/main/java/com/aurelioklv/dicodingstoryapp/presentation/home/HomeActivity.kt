@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,9 +14,13 @@ import com.aurelioklv.dicodingstoryapp.R
 import com.aurelioklv.dicodingstoryapp.databinding.ActivityHomeBinding
 import com.aurelioklv.dicodingstoryapp.presentation.add.AddActivity
 import com.aurelioklv.dicodingstoryapp.presentation.auth.login.LoginActivity
+import com.aurelioklv.dicodingstoryapp.utils.ViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
+    private val viewModel: HomeViewModel by viewModels<HomeViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +31,12 @@ class HomeActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        viewModel.getName().observe(this) {
+            if (it != null) {
+                supportActionBar?.title = getString(R.string.greet_user, it.substringBefore(" "))
+            }
         }
 
         binding.fabAdd.setOnClickListener {
@@ -48,6 +59,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        viewModel.logout()
+        Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -15,6 +17,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+
+        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\"")
     }
 
     buildTypes {
@@ -28,6 +35,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -47,6 +55,14 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation("androidx.core:core-splashscreen:1.0.0")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
