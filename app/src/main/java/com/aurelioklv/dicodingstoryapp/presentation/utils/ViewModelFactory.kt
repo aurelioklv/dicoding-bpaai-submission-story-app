@@ -1,4 +1,4 @@
-package com.aurelioklv.dicodingstoryapp.utils
+package com.aurelioklv.dicodingstoryapp.presentation.utils
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,7 @@ import com.aurelioklv.dicodingstoryapp.data.repository.StoryRepository
 import com.aurelioklv.dicodingstoryapp.di.Injection
 import com.aurelioklv.dicodingstoryapp.presentation.auth.login.LoginViewModel
 import com.aurelioklv.dicodingstoryapp.presentation.auth.register.RegisterViewModel
+import com.aurelioklv.dicodingstoryapp.presentation.details.DetailsViewModel
 import com.aurelioklv.dicodingstoryapp.presentation.home.HomeViewModel
 
 class ViewModelFactory private constructor(
@@ -20,6 +21,8 @@ class ViewModelFactory private constructor(
             return RegisterViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return HomeViewModel(repository) as T
+        } else if (modelClass.isAssignableFrom(DetailsViewModel::class.java)) {
+            return DetailsViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

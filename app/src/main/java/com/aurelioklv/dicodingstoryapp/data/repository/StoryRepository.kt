@@ -1,7 +1,9 @@
 package com.aurelioklv.dicodingstoryapp.data.repository
 
+import com.aurelioklv.dicodingstoryapp.data.local.UserPreferences
 import com.aurelioklv.dicodingstoryapp.data.remote.api.ApiService
-import com.aurelioklv.dicodingstoryapp.utils.UserPreferences
+import com.aurelioklv.dicodingstoryapp.data.remote.api.DetailsResponse
+import com.aurelioklv.dicodingstoryapp.data.remote.api.StoriesResponse
 
 class StoryRepository private constructor(
     private val apiService: ApiService,
@@ -17,6 +19,14 @@ class StoryRepository private constructor(
     suspend fun login(email: String, password: String) = apiService.login(email, password)
     suspend fun logout() = userPreferences.clearSession()
 
+    suspend fun getAllStories(): StoriesResponse {
+        return apiService.getAllStories()
+    }
+
+    suspend fun getDetails(id: String): DetailsResponse {
+        return apiService.getDetails(id)
+    }
+
     companion object {
         @Volatile
         private var instance: StoryRepository? = null
@@ -28,3 +38,4 @@ class StoryRepository private constructor(
         }
     }
 }
+

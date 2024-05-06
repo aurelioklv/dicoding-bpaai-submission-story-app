@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".presentation.home.HomeActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_stories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"

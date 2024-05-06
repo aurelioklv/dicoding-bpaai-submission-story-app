@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.aurelioklv.dicodingstoryapp.data.Result
+import com.aurelioklv.dicodingstoryapp.data.remote.api.ErrorResponse
 import com.aurelioklv.dicodingstoryapp.data.remote.api.LoginResponse
 import com.aurelioklv.dicodingstoryapp.data.repository.StoryRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -35,8 +37,9 @@ class LoginViewModel(private val repository: StoryRepository) : ViewModel() {
                     }
                 }
             } catch (e: HttpException) {
-                val errorBody = e.response()?.errorBody()?.string()
-                _response.value = Result.Error(errorBody ?: e.message())
+                val jsonString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonString, ErrorResponse::class.java)
+                _response.value = Result.Error(errorBody.message ?: e.message())
             }
         }
     }

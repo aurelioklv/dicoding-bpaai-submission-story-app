@@ -1,4 +1,4 @@
-package com.aurelioklv.dicodingstoryapp.utils
+package com.aurelioklv.dicodingstoryapp.data.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore

@@ -2,7 +2,10 @@ package com.aurelioklv.dicodingstoryapp.data.remote.api
 
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @FormUrlEncoded
@@ -19,4 +22,15 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String,
     ): LoginResponse
+
+    @GET("stories")
+    suspend fun getAllStories(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20,
+    ): StoriesResponse
+
+    @GET("stories/{id}")
+    suspend fun getDetails(
+        @Path("id") storyId: String,
+    ): DetailsResponse
 }

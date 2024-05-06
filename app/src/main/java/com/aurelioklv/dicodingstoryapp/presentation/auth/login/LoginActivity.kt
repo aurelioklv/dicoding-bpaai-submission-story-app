@@ -15,7 +15,7 @@ import com.aurelioklv.dicodingstoryapp.data.Result
 import com.aurelioklv.dicodingstoryapp.databinding.ActivityLoginBinding
 import com.aurelioklv.dicodingstoryapp.presentation.auth.register.RegisterActivity
 import com.aurelioklv.dicodingstoryapp.presentation.home.HomeActivity
-import com.aurelioklv.dicodingstoryapp.utils.ViewModelFactory
+import com.aurelioklv.dicodingstoryapp.presentation.utils.ViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding

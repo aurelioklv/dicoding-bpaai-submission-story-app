@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.aurelioklv.dicodingstoryapp.R
 import com.aurelioklv.dicodingstoryapp.data.Result
 import com.aurelioklv.dicodingstoryapp.databinding.ActivityRegisterBinding
-import com.aurelioklv.dicodingstoryapp.utils.ViewModelFactory
+import com.aurelioklv.dicodingstoryapp.presentation.utils.ViewModelFactory
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
