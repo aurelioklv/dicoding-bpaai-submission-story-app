@@ -60,7 +60,7 @@
             android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tv_item_name"
-            tools:text="1h ago" />
+            tools:text="5 min read" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
