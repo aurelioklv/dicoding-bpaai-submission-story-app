@@ -1,6 +1,9 @@
 package com.aurelioklv.dicodingstoryapp.data.remote.api
 
 import com.aurelioklv.dicodingstoryapp.BuildConfig
+import com.aurelioklv.dicodingstoryapp.data.local.UserPreferences
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,11 +13,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiConfig {
     private const val BASE_URL = BuildConfig.BASE_URL
 
-    fun getApiService(token: String): ApiService {
+    fun getApiService(userPreferences: UserPreferences): ApiService {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         val authInterceptor = Interceptor { chain ->
             val req = chain.request()
+            val token = runBlocking { userPreferences.getToken().first() }
             val requestHeaders = req.newBuilder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()
