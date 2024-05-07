@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="login">Masuk</string>
+    <string name="register">Daftar</string>
+    <string name="name">Nama</string>
+    <string name="full_name">Nama lengkap</string>
+    <string name="email_address">Alamat email</string>
+    <string name="password">Kata sandi</string>
+    <string name="password_minimum_length">Minimal 8 karakter</string>
+    <string name="have_account">Punya akun?</string>
+    <string name="don_t_have_account">Belum punya akun?</string>
+    <string name="greet_user">Halo, %1$s</string>
+    <string name="add_story">Tambah cerita</string>
+    <string name="settings">Pengaturan</string>
+    <string name="logout">Keluar</string>
+    <string name="add">Tambah</string>
+    <string name="details">Detail</string>
+    <string name="please_wait">Harap tunggu...</string>
+    <string name="please_fill_the_form">Isi form dengan benar!</string>
+    <string name="min_read">%1$d menit baca</string>
+    <string name="submit">Kirim</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="description">Deskripsi</string>
+    <string name="discard_changes">Buang perubahan</string>
+    <string name="discard_dialog_message">Anda telah membuat perubahan yang belum dipublikasikan. Jika Anda membuang, perubahan akan dihapus. Anda tidak dapat membatalkan aksi ini</string>
+    <string name="discard">Buang</string>
+    <string name="dialog_negative">Batal</string>
+    <string name="seconds_ago">%1$d detik yang lalu</string>
+    <string name="minutes_ago">%1$d menit yang lalu</string>
+    <string name="hours_ago">%1$d jam yang lalu</string>
+    <string name="days_ago">%1$d hari yang lalu</string>
+    <string name="weeks_ago">%1$d minggu yang lalu</string>
+    <string name="months_ago">%1$d bulan yang lalu</string>
+    <string name="years_ago">%1$d tahun yang lalu</string>
+    <string name="no_image_selected">Tidak ada gambar yang dipilih</string>
+    <string name="no_story_added">Tidak ada cerita yang ditambahkan</string>
+</resources>

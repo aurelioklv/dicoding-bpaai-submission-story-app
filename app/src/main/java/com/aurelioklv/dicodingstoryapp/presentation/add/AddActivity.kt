@@ -38,7 +38,8 @@ class AddActivity : AppCompatActivity() {
                 currentImageUri = uri
                 showImage()
             } else {
-                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.no_image_selected), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -70,14 +71,14 @@ class AddActivity : AppCompatActivity() {
             .setTitle(getString(R.string.discard_changes))
             .setMessage(getString(R.string.discard_dialog_message))
             .setPositiveButton(
-                getString(R.string.discard_positive),
+                getString(R.string.discard),
                 object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                         exit()
                     }
                 })
             .setNegativeButton(
-                getString(R.string.discard_negative),
+                getString(R.string.dialog_negative),
                 object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
                     }

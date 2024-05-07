@@ -1,7 +1,9 @@
 package com.aurelioklv.dicodingstoryapp.presentation.home
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -34,7 +36,7 @@ class HomeActivity : AppCompatActivity() {
             if (it.resultCode == AddActivity.ADD_SUCCESS) {
                 viewModel.getAllStories()
             } else {
-                Toast.makeText(this, "No story added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.no_story_added), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -61,8 +63,26 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_logout -> logout()
-            R.id.action_settings -> Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+            R.id.action_logout -> {
+                val confirmationDialog = AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.logout))
+                    .setPositiveButton(
+                        getString(R.string.logout),
+                        object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                                logout()
+                            }
+                        })
+                    .setNegativeButton(
+                        getString(R.string.dialog_negative),
+                        object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface?, which: Int) {
+                            }
+                        })
+                confirmationDialog.show()
+            }
+
+            R.id.action_settings -> startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
         }
         return super.onOptionsItemSelected(item)
     }
@@ -114,7 +134,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun logout() {
         viewModel.logout()
-        Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.logout), Toast.LENGTH_SHORT).show()
 
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)

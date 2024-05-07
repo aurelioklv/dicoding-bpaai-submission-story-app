@@ -52,7 +52,7 @@ class DetailsActivity : AppCompatActivity() {
                         .into(binding.ivDetailPhoto)
                     binding.tvDetailName.text = it.data.name
                     binding.tvTime.text =
-                        getTimeAgo(getTimeMillisFromString(it.data.createdAt.toString()))
+                        getTimeAgo(this, getTimeMillisFromString(it.data.createdAt.toString()))
                     val minuteRead = getReadingTimeMinute(it.data.description.toString())
                     binding.tvReadingTime.text = getString(R.string.min_read, minuteRead)
                     binding.tvDetailDescription.text = it.data.description

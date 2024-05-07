@@ -25,7 +25,8 @@ class StoryAdapter : ListAdapter<StoryItem, StoryAdapter.ViewHolder>(DIFF_CALLBA
                 .into(binding.ivItemPhoto)
             binding.tvItemName.text = item.name
             binding.tvItemDescription.text = item.description
-            binding.tvTime.text = getTimeAgo(getTimeMillisFromString(item.createdAt.toString()))
+            binding.tvTime.text =
+                getTimeAgo(itemView.context, getTimeMillisFromString(item.createdAt.toString()))
             val minuteRead = getReadingTimeMinute(item.description.toString())
             binding.tvReadingTime.text = itemView.context.getString(R.string.min_read, minuteRead)
 

@@ -3,7 +3,7 @@
     <style name="Base.Theme.StoryApp" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/bg2</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 

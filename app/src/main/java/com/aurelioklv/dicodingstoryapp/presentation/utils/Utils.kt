@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.aurelioklv.dicodingstoryapp.BuildConfig
+import com.aurelioklv.dicodingstoryapp.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -35,7 +36,7 @@ fun getTimeMillisFromString(dateTimeString: String): Long {
     return date.time
 }
 
-fun getTimeAgo(timeMillis: Long): String {
+fun getTimeAgo(context: Context, timeMillis: Long): String {
     val now = System.currentTimeMillis()
     val diffMillis = now - timeMillis
 
@@ -48,13 +49,13 @@ fun getTimeAgo(timeMillis: Long): String {
     val years = days / 365
 
     return when {
-        seconds < 60 -> "$seconds seconds ago"
-        minutes < 60 -> "$minutes minutes ago"
-        hours < 24 -> "$hours hours ago"
-        days < 7 -> "$days days ago"
-        weeks < 4 -> "$weeks weeks ago"
-        months < 12 -> "$months months ago"
-        else -> "$years years ago"
+        seconds < 60 -> context.getString(R.string.seconds_ago, seconds)
+        minutes < 60 -> context.getString(R.string.minutes_ago, minutes)
+        hours < 24 -> context.getString(R.string.hours_ago, hours)
+        days < 7 -> context.getString(R.string.days_ago, days)
+        weeks < 4 -> context.getString(R.string.weeks_ago, weeks)
+        months < 12 -> context.getString(R.string.months_ago, months)
+        else -> context.getString(R.string.years_ago, years)
     }
 }
 
@@ -129,12 +130,12 @@ fun File.reduceFileSize(): File {
 
     do {
         val bmpStream = ByteArrayOutputStream()
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
         val bmpPicByteArray = bmpStream.toByteArray()
         streamLength = bmpPicByteArray.size
         compressQuality -= 5
     } while (streamLength > MAXIMAL_SIZE)
-    bitmap?.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+    bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
 
     return file
 }
