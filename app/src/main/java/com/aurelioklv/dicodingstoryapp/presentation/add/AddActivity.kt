@@ -63,7 +63,7 @@ class AddActivity : AppCompatActivity() {
 
         binding.btnAddGallery.setOnClickListener { startGallery() }
         binding.btnAddCamera.setOnClickListener { startCamera() }
-        binding.btnAddSubmit.setOnClickListener { submit() }
+        binding.buttonAdd.setOnClickListener { submit() }
 
         observeLiveData()
 

@@ -47,9 +47,9 @@
         android:text="@string/gallery"
         android:textColor="@color/bg"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btn_add_submit"
+        app:layout_constraintBottom_toTopOf="@+id/button_add"
         app:layout_constraintEnd_toStartOf="@id/btn_add_camera"
-        app:layout_constraintStart_toStartOf="@+id/btn_add_submit" />
+        app:layout_constraintStart_toStartOf="@+id/button_add" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_add_camera"
@@ -63,11 +63,11 @@
         android:textColor="@color/bg"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/btn_add_gallery"
-        app:layout_constraintEnd_toEndOf="@+id/btn_add_submit"
+        app:layout_constraintEnd_toEndOf="@+id/button_add"
         app:layout_constraintStart_toEndOf="@id/btn_add_gallery" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_add_submit"
+        android:id="@+id/button_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"

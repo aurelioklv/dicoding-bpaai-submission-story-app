@@ -50,6 +50,7 @@ class HomeActivity : AppCompatActivity() {
         setupRecyclerView()
         observeLiveData()
 
+        binding.root.setOnRefreshListener { viewModel.getAllStories() }
         binding.fabAdd.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
             launcher.launch(intent)
@@ -116,20 +117,24 @@ class HomeActivity : AppCompatActivity() {
         }
         viewModel.stories.observe(this) {
             when (it) {
-                is Result.Loading -> loadingDialog.show()
+                is Result.Loading -> {}
                 is Result.Error -> {
-                    loadingDialog.dismiss()
+                    resetRefresh()
                     Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
                 }
 
                 is Result.Success -> {
-                    loadingDialog.dismiss()
+                    resetRefresh()
                     setStories(it.data)
                 }
 
-                else -> loadingDialog.dismiss()
+                else -> resetRefresh()
             }
         }
+    }
+
+    private fun resetRefresh() {
+        binding.root.isRefreshing = false
     }
 
     private fun logout() {
