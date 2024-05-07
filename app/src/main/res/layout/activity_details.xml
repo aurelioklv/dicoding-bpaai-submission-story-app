@@ -59,7 +59,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:justificationMode="inter_word"
-            android:text="@string/lorem"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/tv_detail_name"
             app:layout_constraintStart_toStartOf="@id/tv_detail_name"

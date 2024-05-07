@@ -2,6 +2,7 @@ package com.aurelioklv.dicodingstoryapp.presentation.auth.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -48,7 +49,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun checkSession() {
         viewModel.getToken().observe(this) {
-            if (it != null) {
+            Log.d(TAG, "checkSession token: $it")
+            if (!it.isNullOrEmpty()) {
                 redirectToHome()
             }
         }
@@ -100,7 +102,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun redirectToHome() {
         val intent = Intent(this, HomeActivity::class.java)
+        Log.d(TAG, "redirectToHome")
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        private const val TAG = "LoginActivity"
     }
 }

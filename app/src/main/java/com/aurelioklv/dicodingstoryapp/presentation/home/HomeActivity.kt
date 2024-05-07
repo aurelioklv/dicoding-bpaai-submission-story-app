@@ -2,10 +2,12 @@ package com.aurelioklv.dicodingstoryapp.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +29,15 @@ class HomeActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
 
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == AddActivity.ADD_SUCCESS) {
+                viewModel.getAllStories()
+            } else {
+                Toast.makeText(this, "No story added", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,17 +45,12 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.getName().observe(this) {
-            if (it != null) {
-                supportActionBar?.title = getString(R.string.greet_user, getFrontName(it))
-            }
-        }
         setupRecyclerView()
         observeLiveData()
 
         binding.fabAdd.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
-            startActivity(intent)
+            launcher.launch(intent)
         }
     }
 
@@ -76,6 +82,18 @@ class HomeActivity : AppCompatActivity() {
         val loadingDialog = AlertDialog.Builder(this).setView(R.layout.dialog_loading).create()
         loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        viewModel.getName().observe(this) {
+            if (it != null) {
+                supportActionBar?.title = getString(R.string.greet_user, getFrontName(it))
+            }
+        }
+        viewModel.getToken().observe(this) {
+            Log.d(TAG, "observe token: $it")
+            if (!it.isNullOrEmpty()) {
+                Log.d(TAG, "getAllStories()")
+                viewModel.getAllStories()
+            }
+        }
         viewModel.stories.observe(this) {
             when (it) {
                 is Result.Loading -> loadingDialog.show()
@@ -101,5 +119,9 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        private const val TAG = "HomeActivity"
     }
 }

@@ -2,8 +2,11 @@ package com.aurelioklv.dicodingstoryapp.data.repository
 
 import com.aurelioklv.dicodingstoryapp.data.local.UserPreferences
 import com.aurelioklv.dicodingstoryapp.data.remote.api.ApiService
+import com.aurelioklv.dicodingstoryapp.data.remote.api.BasicResponse
 import com.aurelioklv.dicodingstoryapp.data.remote.api.DetailsResponse
 import com.aurelioklv.dicodingstoryapp.data.remote.api.StoriesResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class StoryRepository private constructor(
     private val apiService: ApiService,
@@ -27,6 +30,13 @@ class StoryRepository private constructor(
         return apiService.getDetails(id)
     }
 
+    suspend fun addStory(
+        multipartBody: MultipartBody.Part,
+        descriptionRequestBody: RequestBody,
+    ): BasicResponse {
+        return apiService.addStory(multipartBody, descriptionRequestBody)
+    }
+
     companion object {
         @Volatile
         private var instance: StoryRepository? = null
@@ -38,4 +48,3 @@ class StoryRepository private constructor(
         }
     }
 }
-

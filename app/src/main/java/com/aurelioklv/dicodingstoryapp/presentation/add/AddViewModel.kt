@@ -1,4 +1,4 @@
-package com.aurelioklv.dicodingstoryapp.presentation.details
+package com.aurelioklv.dicodingstoryapp.presentation.add
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,32 +6,32 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aurelioklv.dicodingstoryapp.data.Result
 import com.aurelioklv.dicodingstoryapp.data.remote.api.BasicResponse
-import com.aurelioklv.dicodingstoryapp.data.remote.api.StoryItem
 import com.aurelioklv.dicodingstoryapp.data.repository.StoryRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 
-class DetailsViewModel(private val repository: StoryRepository) : ViewModel() {
-    private val _story = MutableLiveData<Result<StoryItem>>()
-    val story: LiveData<Result<StoryItem>> = _story
+class AddViewModel(private val repository: StoryRepository) : ViewModel() {
+    private val _response =
+        MutableLiveData<Result<BasicResponse>>()
+    val response: LiveData<Result<BasicResponse>> = _response
 
-    fun getDetails(id: String) {
+    fun addStory(multipartBody: MultipartBody.Part, descriptionRequestBody: RequestBody) {
         viewModelScope.launch {
             try {
-                _story.value = Result.Loading
-                val response = repository.getDetails(id)
+                _response.value = Result.Loading
+                val response = repository.addStory(multipartBody, descriptionRequestBody)
                 if (!response.error) {
-                    if (response.story != null) {
-                        _story.value = Result.Success(response.story)
-                    }
+                    _response.value = Result.Success(response)
                 }
             } catch (e: HttpException) {
                 val jsonString = e.response()?.errorBody()?.string()
                 val errorBody = Gson().fromJson(jsonString, BasicResponse::class.java)
-                _story.value = Result.Error(errorBody.message)
+                _response.value = Result.Error(errorBody.message)
             } catch (e: Exception) {
-                _story.value = Result.Error(e.message.toString())
+                _response.value = Result.Error(e.message.toString())
             }
         }
     }

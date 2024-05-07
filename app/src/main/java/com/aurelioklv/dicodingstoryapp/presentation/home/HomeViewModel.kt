@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.aurelioklv.dicodingstoryapp.data.Result
-import com.aurelioklv.dicodingstoryapp.data.remote.api.ErrorResponse
+import com.aurelioklv.dicodingstoryapp.data.remote.api.BasicResponse
 import com.aurelioklv.dicodingstoryapp.data.remote.api.StoryItem
 import com.aurelioklv.dicodingstoryapp.data.repository.StoryRepository
 import com.google.gson.Gson
@@ -17,10 +17,6 @@ import retrofit2.HttpException
 class HomeViewModel(private val repository: StoryRepository) : ViewModel() {
     private val _stories = MutableLiveData<Result<List<StoryItem?>>>()
     val stories: LiveData<Result<List<StoryItem?>>> = _stories
-
-    init {
-        getAllStories()
-    }
 
     fun getAllStories() {
         viewModelScope.launch {
@@ -34,15 +30,21 @@ class HomeViewModel(private val repository: StoryRepository) : ViewModel() {
                 }
             } catch (e: HttpException) {
                 val jsonString = e.response()?.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonString, ErrorResponse::class.java)
-                Log.e(TAG, errorBody.message.toString())
-                _stories.value = Result.Error(errorBody.message ?: e.message())
+                val errorBody = Gson().fromJson(jsonString, BasicResponse::class.java)
+                Log.e(TAG, errorBody.message)
+                _stories.value = Result.Error(errorBody.message)
+            } catch (e: Exception) {
+                _stories.value = Result.Error(e.message.toString())
             }
         }
     }
 
     fun getName(): LiveData<String?> {
         return repository.getName().asLiveData()
+    }
+
+    fun getToken(): LiveData<String?> {
+        return repository.getToken().asLiveData()
     }
 
     fun logout() {

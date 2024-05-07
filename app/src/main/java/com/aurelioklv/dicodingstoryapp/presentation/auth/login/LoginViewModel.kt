@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.aurelioklv.dicodingstoryapp.data.Result
-import com.aurelioklv.dicodingstoryapp.data.remote.api.ErrorResponse
+import com.aurelioklv.dicodingstoryapp.data.remote.api.BasicResponse
 import com.aurelioklv.dicodingstoryapp.data.remote.api.LoginResponse
 import com.aurelioklv.dicodingstoryapp.data.repository.StoryRepository
 import com.google.gson.Gson
@@ -38,8 +38,10 @@ class LoginViewModel(private val repository: StoryRepository) : ViewModel() {
                 }
             } catch (e: HttpException) {
                 val jsonString = e.response()?.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonString, ErrorResponse::class.java)
-                _response.value = Result.Error(errorBody.message ?: e.message())
+                val errorBody = Gson().fromJson(jsonString, BasicResponse::class.java)
+                _response.value = Result.Error(errorBody.message)
+            } catch (e: Exception) {
+                _response.value = Result.Error(e.message.toString())
             }
         }
     }
