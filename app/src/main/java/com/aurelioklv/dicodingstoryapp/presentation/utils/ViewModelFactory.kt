@@ -11,6 +11,7 @@ import com.aurelioklv.dicodingstoryapp.presentation.auth.login.LoginViewModel
 import com.aurelioklv.dicodingstoryapp.presentation.auth.register.RegisterViewModel
 import com.aurelioklv.dicodingstoryapp.presentation.details.DetailsViewModel
 import com.aurelioklv.dicodingstoryapp.presentation.home.HomeViewModel
+import com.aurelioklv.dicodingstoryapp.presentation.maps.MapsViewModel
 
 class ViewModelFactory private constructor(
     private val repository: StoryRepository,
@@ -27,6 +28,8 @@ class ViewModelFactory private constructor(
             return DetailsViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(AddViewModel::class.java)) {
             return AddViewModel(repository) as T
+        } else if (modelClass.isAssignableFrom(MapsViewModel::class.java)) {
+            return MapsViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

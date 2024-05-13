@@ -38,7 +38,7 @@ data class LoginResult(
 data class StoriesResponse(
 
     @field:SerializedName("listStory")
-    val listStory: List<StoryItem?>? = null,
+    val listStory: List<StoryItem> = emptyList(),
 
     @field:SerializedName("error")
     val error: Boolean,

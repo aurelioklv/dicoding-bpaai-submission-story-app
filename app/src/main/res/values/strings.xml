@@ -39,4 +39,10 @@
     <string name="years_ago">%1$d years ago</string>
     <string name="no_image_selected">No image selected</string>
     <string name="no_story_added">No story added</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="story">Story</string>
 </resources>

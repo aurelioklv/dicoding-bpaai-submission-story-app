@@ -21,6 +21,7 @@ import com.aurelioklv.dicodingstoryapp.data.remote.api.StoryItem
 import com.aurelioklv.dicodingstoryapp.databinding.ActivityHomeBinding
 import com.aurelioklv.dicodingstoryapp.presentation.add.AddActivity
 import com.aurelioklv.dicodingstoryapp.presentation.auth.login.LoginActivity
+import com.aurelioklv.dicodingstoryapp.presentation.maps.MapsActivity
 import com.aurelioklv.dicodingstoryapp.presentation.utils.StoryAdapter
 import com.aurelioklv.dicodingstoryapp.presentation.utils.ViewModelFactory
 import com.aurelioklv.dicodingstoryapp.presentation.utils.getFrontName
@@ -84,6 +85,8 @@ class HomeActivity : AppCompatActivity() {
             }
 
             R.id.action_settings -> startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+
+            R.id.action_maps -> startActivity(Intent(this, MapsActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }

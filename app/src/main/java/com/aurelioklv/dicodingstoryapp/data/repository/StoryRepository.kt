@@ -22,8 +22,8 @@ class StoryRepository private constructor(
     suspend fun login(email: String, password: String) = apiService.login(email, password)
     suspend fun logout() = userPreferences.clearSession()
 
-    suspend fun getAllStories(): StoriesResponse {
-        return apiService.getAllStories()
+    suspend fun getAllStories(location: Int = 0): StoriesResponse {
+        return apiService.getAllStories(location = location)
     }
 
     suspend fun getDetails(id: String): DetailsResponse {
