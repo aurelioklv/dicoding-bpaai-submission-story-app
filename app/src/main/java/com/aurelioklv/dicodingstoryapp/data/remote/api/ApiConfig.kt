@@ -14,8 +14,11 @@ object ApiConfig {
     private const val BASE_URL = BuildConfig.BASE_URL
 
     fun getApiService(userPreferences: UserPreferences): ApiService {
-        val loggingInterceptor =
+        val loggingInterceptor = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        } else {
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+        }
         val authInterceptor = Interceptor { chain ->
             val req = chain.request()
             val token = runBlocking { userPreferences.getToken().first() }
