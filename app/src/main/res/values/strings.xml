@@ -46,4 +46,9 @@
     <string name="hybrid_type">Hybrid</string>
     <string name="story">Story</string>
     <string name="retry">Retry</string>
+    <string name="location">Location</string>
+    <string name="request_location_permission">Request location permission</string>
+    <string name="request_location_permission_message">This app need you to allow location permission to send message with location</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

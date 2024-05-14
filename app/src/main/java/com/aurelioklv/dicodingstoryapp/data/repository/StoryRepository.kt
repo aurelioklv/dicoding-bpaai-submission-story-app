@@ -52,8 +52,15 @@ class StoryRepository private constructor(
     suspend fun addStory(
         multipartBody: MultipartBody.Part,
         descriptionRequestBody: RequestBody,
+        latRequestBody: RequestBody?,
+        longRequestBody: RequestBody?
     ): BasicResponse {
-        return apiService.addStory(multipartBody, descriptionRequestBody)
+        return apiService.addStory(
+            multipartBody,
+            descriptionRequestBody,
+            latRequestBody,
+            longRequestBody
+        )
     }
 
     companion object {

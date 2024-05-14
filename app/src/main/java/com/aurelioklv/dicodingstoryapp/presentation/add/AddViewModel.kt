@@ -18,11 +18,21 @@ class AddViewModel(private val repository: StoryRepository) : ViewModel() {
         MutableLiveData<Result<BasicResponse>>()
     val response: LiveData<Result<BasicResponse>> = _response
 
-    fun addStory(multipartBody: MultipartBody.Part, descriptionRequestBody: RequestBody) {
+    fun addStory(
+        multipartBody: MultipartBody.Part,
+        descriptionRequestBody: RequestBody,
+        latRequestBody: RequestBody?,
+        longRequestBody: RequestBody?
+    ) {
         viewModelScope.launch {
             try {
                 _response.value = Result.Loading
-                val response = repository.addStory(multipartBody, descriptionRequestBody)
+                val response = repository.addStory(
+                    multipartBody,
+                    descriptionRequestBody,
+                    latRequestBody,
+                    longRequestBody
+                )
                 if (!response.error) {
                     _response.value = Result.Success(response)
                 }

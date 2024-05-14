@@ -1,8 +1,12 @@
 package com.aurelioklv.dicodingstoryapp.presentation.add
 
+import android.Manifest
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.aurelioklv.dicodingstoryapp.R
@@ -20,6 +25,8 @@ import com.aurelioklv.dicodingstoryapp.presentation.utils.ViewModelFactory
 import com.aurelioklv.dicodingstoryapp.presentation.utils.getImageUri
 import com.aurelioklv.dicodingstoryapp.presentation.utils.reduceFileSize
 import com.aurelioklv.dicodingstoryapp.presentation.utils.uriToFile
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -31,6 +38,11 @@ class AddActivity : AppCompatActivity() {
     private val viewModel: AddViewModel by viewModels<AddViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private var lat: Float? = null
+    private var long: Float? = null
+    private lateinit var loadingDialog: AlertDialog
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val launcherGallery =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -50,6 +62,16 @@ class AddActivity : AppCompatActivity() {
             }
         }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                getMyLocation()
+                Toast.makeText(this, "Permission request granted", Toast.LENGTH_SHORT).show()
+            } else {
+                showPermissionSettingsDialog()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,34 +82,26 @@ class AddActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        loadingDialog = AlertDialog.Builder(this).setView(R.layout.dialog_loading).create()
 
         binding.btnAddGallery.setOnClickListener { startGallery() }
         binding.btnAddCamera.setOnClickListener { startCamera() }
         binding.buttonAdd.setOnClickListener { submit() }
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getMyLocation()
+            } else {
+                lat = null
+                long = null
+            }
+        }
 
         observeLiveData()
 
-        val confirmationDialog = AlertDialog.Builder(this)
-            .setTitle(getString(R.string.discard_changes))
-            .setMessage(getString(R.string.discard_dialog_message))
-            .setPositiveButton(
-                getString(R.string.discard),
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                        exit()
-                    }
-                })
-            .setNegativeButton(
-                getString(R.string.dialog_negative),
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                    }
-                })
-
-
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (isChanged()) confirmationDialog.show() else exit()
+                if (isChanged()) showConfirmationDialog() else exit()
             }
         })
 
@@ -95,7 +109,6 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun observeLiveData() {
-        val loadingDialog = AlertDialog.Builder(this).setView(R.layout.dialog_loading).create()
         loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         viewModel.response.observe(this) {
@@ -118,18 +131,98 @@ class AddActivity : AppCompatActivity() {
         }
     }
 
+    private fun showConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.discard_changes))
+            .setMessage(getString(R.string.discard_dialog_message))
+            .setPositiveButton(
+                getString(R.string.discard),
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        exit()
+                    }
+                })
+            .setNegativeButton(
+                getString(R.string.dialog_negative),
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {}
+                }).show()
+    }
+
+    private fun showPermissionSettingsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.request_location_permission))
+            .setMessage(getString(R.string.request_location_permission_message))
+            .setPositiveButton(getString(R.string.yes), object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", packageName, null)
+                    intent.setData(uri)
+                    startActivity(intent)
+                }
+            })
+            .setNegativeButton(getString(R.string.no), object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {}
+            })
+            .setOnDismissListener {
+                binding.switchLocation.isChecked = false
+            }.create().show()
+    }
+
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun makePermissionRequest() {
+        requestPermissionLauncher.launch(PERMISSION_LOCATION)
+    }
+
+    private fun getMyLocation() {
+        if (checkPermission(PERMISSION_LOCATION)) {
+            binding.switchLocation.isChecked = true
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                if (it != null) {
+                    lat = it.latitude.toFloat()
+                    long = it.longitude.toFloat()
+                    Toast.makeText(this, "lat: $lat, long: $long", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Location is not found. Try Again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            binding.switchLocation.isChecked = false
+            makePermissionRequest()
+        }
+    }
+
     private fun submit() {
         currentImageUri?.let { uri ->
+            loadingDialog.show()
             val imageFile = uriToFile(this, uri).reduceFileSize()
             val description = binding.edAddDescription.text.toString()
 
             val fileRequestBody = imageFile.asRequestBody("image/jpeg".toMediaType())
             val descriptionRequestBody = description.toRequestBody("text/plain".toMediaType())
+            val latRequestBody = lat?.toString()?.toRequestBody("text/plain".toMediaType())
+            val longRequestBody = long?.toString()?.toRequestBody("text/plain".toMediaType())
 
             val multipartBody =
                 MultipartBody.Part.createFormData("photo", imageFile.name, fileRequestBody)
 
-            viewModel.addStory(multipartBody, descriptionRequestBody)
+            viewModel.addStory(
+                multipartBody,
+                descriptionRequestBody,
+                latRequestBody,
+                longRequestBody
+            )
         } ?: showToast(getString(R.string.please_fill_the_form))
     }
 
@@ -162,6 +255,7 @@ class AddActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val PERMISSION_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
         const val ADD_SUCCESS = 1
         const val NO_CHANGES = -1
     }
