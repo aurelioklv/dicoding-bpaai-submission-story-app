@@ -16,12 +16,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aurelioklv.dicodingstoryapp.R
-import com.aurelioklv.dicodingstoryapp.data.Result
-import com.aurelioklv.dicodingstoryapp.data.remote.api.StoryItem
 import com.aurelioklv.dicodingstoryapp.databinding.ActivityHomeBinding
 import com.aurelioklv.dicodingstoryapp.presentation.add.AddActivity
 import com.aurelioklv.dicodingstoryapp.presentation.auth.login.LoginActivity
 import com.aurelioklv.dicodingstoryapp.presentation.maps.MapsActivity
+import com.aurelioklv.dicodingstoryapp.presentation.utils.LoadingStateAdapter
 import com.aurelioklv.dicodingstoryapp.presentation.utils.StoryAdapter
 import com.aurelioklv.dicodingstoryapp.presentation.utils.ViewModelFactory
 import com.aurelioklv.dicodingstoryapp.presentation.utils.getFrontName
@@ -31,11 +30,12 @@ class HomeActivity : AppCompatActivity() {
     private val viewModel: HomeViewModel by viewModels<HomeViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private val adapter = StoryAdapter()
 
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == AddActivity.ADD_SUCCESS) {
-                viewModel.getAllStories()
+                adapter.refresh()
             } else {
                 Toast.makeText(this, getString(R.string.no_story_added), Toast.LENGTH_SHORT).show()
             }
@@ -51,11 +51,17 @@ class HomeActivity : AppCompatActivity() {
         setupRecyclerView()
         observeLiveData()
 
-        binding.root.setOnRefreshListener { viewModel.getAllStories() }
+        binding.root.setOnRefreshListener { adapter.refresh() }
+        adapter.addOnPagesUpdatedListener { binding.root.isRefreshing = false }
         binding.fabAdd.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
             launcher.launch(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.refresh()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -91,53 +97,25 @@ class HomeActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setStories(stories: List<StoryItem?>) {
-        val adapter = StoryAdapter()
-        adapter.submitList(stories)
-        binding.rvStories.adapter = adapter
-    }
-
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(this)
         binding.rvStories.layoutManager = layoutManager
     }
 
     private fun observeLiveData() {
-        val loadingDialog = AlertDialog.Builder(this).setView(R.layout.dialog_loading).create()
-        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        binding.rvStories.adapter = adapter.withLoadStateFooter(
+            LoadingStateAdapter { adapter.retry() }
+        )
+        viewModel.stories.observe(this) {
+            Log.d(TAG, "observeLiveData: $it")
+            adapter.submitData(lifecycle, it)
+        }
 
         viewModel.getName().observe(this) {
             if (it != null) {
                 supportActionBar?.title = getString(R.string.greet_user, getFrontName(it))
             }
         }
-        viewModel.getToken().observe(this) {
-            Log.d(TAG, "observe token: $it")
-            if (!it.isNullOrEmpty()) {
-                Log.d(TAG, "getAllStories()")
-                viewModel.getAllStories()
-            }
-        }
-        viewModel.stories.observe(this) {
-            when (it) {
-                is Result.Loading -> {}
-                is Result.Error -> {
-                    resetRefresh()
-                    Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
-                }
-
-                is Result.Success -> {
-                    resetRefresh()
-                    setStories(it.data)
-                }
-
-                else -> resetRefresh()
-            }
-        }
-    }
-
-    private fun resetRefresh() {
-        binding.root.isRefreshing = false
     }
 
     private fun logout() {

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleAndroidLibrariesMapsplatformSecretsGradlePlugin)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -68,6 +69,11 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation(libs.play.services.maps)
+
+    implementation("androidx.room:room-ktx:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-paging:2.5.2")
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

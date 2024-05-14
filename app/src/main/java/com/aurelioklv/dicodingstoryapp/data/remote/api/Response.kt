@@ -1,5 +1,7 @@
 package com.aurelioklv.dicodingstoryapp.data.remote.api
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class BasicResponse(
@@ -59,6 +61,7 @@ data class DetailsResponse(
     val story: StoryItem? = null,
 )
 
+@Entity(tableName = "story")
 data class StoryItem(
 
     @field:SerializedName("photoUrl")
@@ -76,8 +79,9 @@ data class StoryItem(
     @field:SerializedName("lon")
     val lon: Double? = null,
 
+    @PrimaryKey
     @field:SerializedName("id")
-    val id: String? = null,
+    val id: String,
 
     @field:SerializedName("lat")
     val lat: Double? = null,
