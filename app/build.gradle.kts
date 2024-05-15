@@ -43,6 +43,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -76,7 +80,18 @@ dependencies {
     implementation("androidx.room:room-paging:2.5.2")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 
-    testImplementation(libs.junit)
+    implementation("androidx.test.espresso:espresso-idling-resource:3.4.0")
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0") //InstantTaskExecutorRule
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1") //TestDispatcher
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.4.0") //IntentsTestRule
+
+    testImplementation(libs.junit)
+    testImplementation("androidx.arch.core:core-testing:2.1.0") // InstantTaskExecutorRule
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1") //TestDispatcher
+    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
 }

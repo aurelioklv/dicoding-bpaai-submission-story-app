@@ -36,4 +36,15 @@
     <string name="years_ago">%1$d tahun yang lalu</string>
     <string name="no_image_selected">Tidak ada gambar yang dipilih</string>
     <string name="no_story_added">Tidak ada cerita yang ditambahkan</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satelit</string>
+    <string name="terrain_type">Medan</string>
+    <string name="story">Cerita</string>
+    <string name="retry">Coba ulang</string>
+    <string name="location">Lokasi</string>
+    <string name="request_location_permission">Meminta izin lokasi</string>
+    <string name="request_location_permission_message">Aplikasi ini membutuhkan izin lokasi untuk mengirim cerita dengan lokasi</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="dialog_continue">Lanjutkan</string>
 </resources>

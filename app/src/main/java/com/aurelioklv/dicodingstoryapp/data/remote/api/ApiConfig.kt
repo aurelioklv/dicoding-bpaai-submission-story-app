@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
-    private const val BASE_URL = BuildConfig.BASE_URL
+    var BASE_URL = BuildConfig.BASE_URL
 
     fun getApiService(userPreferences: UserPreferences): ApiService {
         val loggingInterceptor = if (BuildConfig.DEBUG) {

@@ -75,7 +75,7 @@ class HomeActivity : AppCompatActivity() {
                 val confirmationDialog = AlertDialog.Builder(this)
                     .setTitle(getString(R.string.logout))
                     .setPositiveButton(
-                        getString(R.string.logout),
+                        getString(R.string.dialog_continue),
                         object : DialogInterface.OnClickListener {
                             override fun onClick(dialog: DialogInterface?, which: Int) {
                                 logout()
